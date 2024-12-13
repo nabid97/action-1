@@ -1,0 +1,48 @@
+name: Storing workflow data as artifacts
+
+on: push
+
+jobs:
+  build_job_1:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install cowsay program
+        run: sudo apt-get install cowsay -y
+
+      - name: Execute cowsay CDM
+        run: 'cowsay -f dragon "Run for cover, I am a DRAGON....RAWR" >> dragon1.txt'
+
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v4.4.3
+        with:
+          name: dragon-text-file
+          path: dragon1.txt
+
+  test_job_2:
+    needs: build_job_1 # depends on build_job_1
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download a Build Artifact
+        uses: actions/download-artifact@v4.1.8
+        with:
+          name: dragon-text-file
+          path: dragon1.txt
+
+      - name: Test File Exists
+        run: grep -i "dragon" dragon1.txt
+
+  deploy_Job_3:
+    needs: test_job_2 # depends on test_job_2
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download a Build Artifact
+        uses: actions/download-artifact@v4.1.8
+        with:
+          name: dragon-text-file
+          path: dragon1.txt
+
+      - name: Read File
+        run: cat dragon1.txt
+
+      - name: Deploy
+        run: echo deploying...
