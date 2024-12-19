@@ -1,4 +1,4 @@
-#The runner context contains information about runner that is executing the current job
+#The runner context contains information about runner that is executing the current job.
 name: Context testing 
 on: push
 
