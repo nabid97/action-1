@@ -1,0 +1,20 @@
+name: matrix configuration to test multiple images and OS'
+# This will create 6 different jobs for us (OS and images) combination of all variables
+
+on: 
+  push:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, ubuntu-20.04, windows-latest, macos-latest]
+        images: [hello-world, alpine]
+    runs-on: ${{ matrix.os }}
+    steps: 
+      - name: Echo Docker Details
+        run: docker info
+
+      - name: Run Images on ${{ matrix.os }}
+        run: docker run ${{ matrix.images }}
